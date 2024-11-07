@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-
+import { useToast } from "@/hooks/use-toast";
 const HomePage = () => {
+  const { toast } = useToast();
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(-1);
@@ -13,10 +14,7 @@ const HomePage = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const timerRef = useRef<NodeJS.Timeout>();
 
-  const questions = [
-    "Does this site functionality work after 3 seconds?",
-    "How about now after 6 seconds?",
-  ];
+  const questions = ["האם הוידאו עצר אחרי 3 שניות?", "ועכשיו אחרי 6 שניות?"];
 
   const startVideo = async () => {
     try {
@@ -66,6 +64,11 @@ const HomePage = () => {
         }, 3000);
       }
     } else {
+      toast({
+        variant: "destructive",
+        title: "תשובה שגויה",
+        description: "נסה שוב",
+      });
       setIsPlaying(false);
       videoRef.current?.pause();
       setWrongAnswer(true);
@@ -86,7 +89,7 @@ const HomePage = () => {
   return (
     <div className="flex flex-col items-center max-w-2xl mx-auto p-4">
       <div className="mb-4 text-lg font-semibold">
-        Wrong Answers: {wrongAnswersCount}
+        תשובות שגויות: {wrongAnswersCount}
       </div>
       <div className="relative w-full">
         <video
@@ -107,8 +110,8 @@ const HomePage = () => {
             <button
               onClick={startVideo}
               className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-              aria-label="Start Video">
-              Start Video
+              aria-label="התחל וידאו">
+              התחל וידאו
             </button>
           </div>
         )}
@@ -136,12 +139,12 @@ const HomePage = () => {
                   onClick={() => handleAnswer(option)}
                   aria-label={`Answer option ${option}`}>
                   {option === 1
-                    ? "Yes"
+                    ? "כן"
                     : option === 2
-                    ? "No"
+                    ? "לא"
                     : option === 3
-                    ? "Don't know"
-                    : "Not so much"}
+                    ? "לא יודע"
+                    : "לא שמתי לב"}
                 </button>
               ))}
             </div>
@@ -150,7 +153,7 @@ const HomePage = () => {
 
       {quizComplete && (
         <div className="mt-4 text-center text-green-600 font-medium">
-          Quiz complete! Enjoy the rest of the video.
+          המבחן הסתיים בהצלחה! תהנה משאר הוידאו
         </div>
       )}
     </div>
