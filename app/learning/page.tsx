@@ -70,6 +70,11 @@ const HomePage = () => {
       videoRef.current?.pause();
       setWrongAnswer(true);
       setWrongAnswersCount((prev) => prev + 1);
+      window.history.replaceState(
+        null,
+        "",
+        `?wrongAnswers=${wrongAnswersCount + 1}`
+      );
     }
   };
 
